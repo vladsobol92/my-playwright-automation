@@ -1,6 +1,6 @@
 The site to be tested:
 
-https://uk.bookshop.org/
+https://rahvaraamat.ee/en
 
 Useful links
 
@@ -9,4 +9,4 @@ Useful links
 Run tests:
 npx playwright test tests/bookstore-search.spec.ts --headed
 
-npx playwright test tests/bookstore-search.spec.ts --headed --project=chromium
+npx playwright test tests/bookstore-search.spec.ts --headed --project=chromium --workers=1
