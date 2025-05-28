@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { acceptCookies } from "../../../helper/common";
 
 const TEST_URL = "https://rahvaraamat.ee/en";
 
@@ -12,13 +13,8 @@ test("Login with Invalid credentials", async ({ page }) => {
   // go to URL
   await page.goto(TEST_URL);
   // Accept cookie
-  await page.getByRole("button", { name: "Allow all", exact: true }).click();
-
-  // expect Home Page is loaded
-  await expect(
-    page.getByRole("heading", { name: "By Category" }),
-    "Expect 'Home Page' is displayed"
-  ).toBeVisible();
+    // Accept cookie
+  await acceptCookies(page);  
 
   // click Login button
   await page.getByText("Login").click();

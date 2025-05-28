@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { acceptCookies } from "../../../helper/common";
 
 const TEST_URL = "https://rahvaraamat.ee/en";
 
@@ -15,13 +16,7 @@ test("Search existing book", async ({ page }) => {
   // go to URL
   await page.goto(TEST_URL);
   // Accept cookie
-  await page.getByRole("button", { name: "Allow all", exact: true }).click();
-
-  // expect Home Page is loaded
-  expect(
-    page.getByRole("heading", { name: "By Category" }),
-    "Expect 'Home Page' is loaded"
-  ).toBeVisible();
+  await acceptCookies(page);
 
   //type in the search input
   await page.locator('input[name="search"]').nth(1).fill(searchPhrase);
@@ -56,13 +51,7 @@ test("Search non-existing book", async ({ page }) => {
   // go to URL
   await page.goto(TEST_URL);
   // Accept cookie
-  await page.getByRole("button", { name: "Allow all", exact: true }).click();
-
-  // expect Home Page is loaded
-  expect(
-    page.getByRole("heading", { name: "By Category" }),
-    "Expect 'Home Page' is loaded"
-  ).toBeVisible();
+  await acceptCookies(page);
 
   //type in the search input
   await page.locator('input[name="search"]').nth(1).fill(searchPhrase);
@@ -77,7 +66,7 @@ test("Search non-existing book", async ({ page }) => {
     })
   ).toBeVisible();
 
-  // check results are visible
+  // check results are not visible
   const productCard = page.locator('[class^="styles_productCardWrapper__"]');
   expect(await productCard.count(), "Expect no results found").toBe(0);
 });

@@ -9,4 +9,6 @@ Useful links
 Run tests:
 npx playwright test tests/bookstore-search.spec.ts --headed
 
-npx playwright test tests/bookstore-search.spec.ts --headed --project=chromium --workers=1
+npx playwright test tests/bookstore-search.spec.ts --headed --project=chromium --workers=4
+
+npx playwright test --headless --project=chromium --workers=4
