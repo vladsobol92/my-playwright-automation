@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { acceptCookies } from "../../../helper/common";
+import { acceptCookies } from "../../../helper/base-actions";
 
 const TEST_URL = "https://rahvaraamat.ee/en";
 

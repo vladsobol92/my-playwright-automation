@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { acceptCookies } from "../../../helper/common";
+import { acceptCookies } from "../../../helper/base-actions";
+import { CookiesPage } from "../../../pages/cookies-page";
 
 const TEST_URL = "https://rahvaraamat.ee/en";
 
@@ -18,12 +19,7 @@ test("Accept cookies", async ({ page }) => {
 test("Deny cookies", async ({ page }) => {
   // go to URL
   await page.goto(TEST_URL);
-  // Accept cookie
-  await page.getByRole("button", { name: "Deny", exact: true }).click();
-
-  // expect Home Page is loaded
-  await expect(
-    page.getByRole("heading", { name: "By Category" }),
-    "Expect 'Home Page' is loaded"
-  ).toBeVisible();
+  // Deny cookie
+  let cookiesPage = new CookiesPage(page);
+  await (await cookiesPage.clickDenyButton()).expectHomePageLoaded();
 });
