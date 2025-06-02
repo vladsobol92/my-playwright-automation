@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
 import { acceptCookies } from "../../../helper/base-actions";
-import { HeaderPage } from "../../../pages/page-components/page-header";
 
 const TEST_URL = "https://rahvaraamat.ee/en";
 
@@ -27,7 +26,4 @@ test("Login with Invalid credentials", async ({ page }) => {
   await (
     await loginFormPage.loginWithCredentials(loginData)
   ).expectErrorMessageIsLoaded();
-
-  // expect error message
-  await loginFormPage.expectErrorMessageIsLoaded();
 });

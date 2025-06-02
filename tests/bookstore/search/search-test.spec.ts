@@ -16,27 +16,25 @@ test("Search existing book", async ({ page }) => {
   // go to URL
   await page.goto(TEST_URL);
   // Accept cookie
-  await acceptCookies(page);
+  const homePage = await acceptCookies(page);
 
   //type in the search input
-  await page.locator('input[name="search"]').nth(1).fill(searchPhrase);
+  const searchListPage = await homePage.pageHeader.performSearch(searchPhrase);
 
-  // submit
-  await page.getByRole("button", { name: "Search" }).click();
+  await searchListPage.expectItemsListPageLoaded();
+
+  const pageTitleText = await searchListPage.getTitleText();
 
   // wait for full results to load
-  await expect(
-    page.getByRole("heading", {
-      name: /^Search results: .+$/i,
-    })
-  ).toBeVisible();
+  expect(pageTitleText, "Expect search results to load").toContain(
+    "Search results"
+  );
 
-  // check results are visible
-  const productCard = page.locator('[class^="styles_productCardWrapper__"]');
-  await expect(
-    productCard.nth(0),
+  // check search results are loaded
+  expect(
+    await searchListPage.getAllItemsCount(),
     "Expect searched items are loaded"
-  ).toBeVisible();
+  ).toBeGreaterThan(0);
 });
 
 /**
@@ -47,26 +45,26 @@ test("Search existing book", async ({ page }) => {
  */
 
 test("Search non-existing book", async ({ page }) => {
-  const searchPhrase = "Lord of the rings";
+  const searchPhrase = "asdadasdasd";
   // go to URL
   await page.goto(TEST_URL);
   // Accept cookie
-  await acceptCookies(page);
+  const homePage = await acceptCookies(page);
 
   //type in the search input
-  await page.locator('input[name="search"]').nth(1).fill(searchPhrase);
+  const searchListPage = await homePage.pageHeader.performSearch(searchPhrase);
 
-  // submit
-  await page.getByRole("button", { name: "Search" }).click();
+  await searchListPage.expectItemsListPageLoaded();
+
+  const pageTitleText = await searchListPage.getTitleText();
 
   // wait for full results to load
-  await expect(
-    page.getByRole("heading", {
-      name: /^Search results: .+$/i,
-    })
-  ).toBeVisible();
+  expect(pageTitleText, "Expect search results to load").toContain(
+    "Search results"
+  );
 
-  // check results are not visible
-  const productCard = page.locator('[class^="styles_productCardWrapper__"]');
-  expect(await productCard.count(), "Expect no results found").toBe(0);
+  expect(
+    await searchListPage.getAllItemsCount(),
+    "Expect searched items are loaded"
+  ).toBe(0);
 });
