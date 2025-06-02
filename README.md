@@ -11,4 +11,4 @@ npx playwright test tests/bookstore-search.spec.ts --headed
 
 npx playwright test tests/bookstore-search.spec.ts --headed --project=chromium --workers=4
 
-npx playwright test --headless --project=chromium --workers=4
+npx playwright test --project=chromium --workers=4

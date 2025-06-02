@@ -3,10 +3,10 @@ import { acceptCookies } from "../../../helper/base-actions";
 
 const TEST_URL = "https://rahvaraamat.ee/en";
 
-test("Login with Invalid credentials", async ({ page }) => {
+test("Login with non existing credentials", async ({ page }) => {
   // credentials
   let loginData = {
-    email: "invalidEmail@mail.com",
+    email: "nonExistingEmail@mail.com",
     pass: "12345789",
   };
 
@@ -25,5 +25,34 @@ test("Login with Invalid credentials", async ({ page }) => {
   // try to login
   await (
     await loginFormPage.loginWithCredentials(loginData)
-  ).expectErrorMessageIsLoaded();
+  ).expectLargeErrorMessageIsLoaded();
+});
+
+test("Login with Invalid email", async ({ page }) => {
+  // credentials
+  let loginData = {
+    email: "invalidEmail",
+    pass: "12345789",
+  };
+
+  // go to URL
+  await page.goto(TEST_URL);
+  // Accept cookie
+
+  let homePage = await acceptCookies(page);
+
+  // click Login button
+  let loginFormPage = await homePage.pageHeader.clickLoginButton();
+
+  // expect login form is loaded
+  await loginFormPage.expectLoginPageLoaded();
+
+  // try to login
+  await (
+    await loginFormPage.loginWithCredentials(loginData)
+  ).expectSmallErrorMessageIsLoaded();
+
+  // validate error text
+  let errorText = "Please enter a valid email.";
+  expect(loginFormPage.errorMessage_small).toHaveText(errorText);
 });

@@ -9,16 +9,26 @@ export class BasePage<T> {
   protected readonly page: Page;
 
   // locators
-  protected errorMessage: Locator;
+  public errorMessage_large: Locator;
+  public errorMessage_small: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.errorMessage = page.locator('[class*="styles_error"]'); // expect error message
+    this.errorMessage_large = page.locator('[class*="styles_error"]'); // expect error message
+    this.errorMessage_small = page.locator(".errorMessage"); // expect error message
   }
 
-  async expectErrorMessageIsLoaded(): Promise<this> {
+  async expectLargeErrorMessageIsLoaded(): Promise<this> {
     await expect(
-      this.errorMessage,
+      this.errorMessage_large,
+      "Expect Error meessage is displayed"
+    ).toBeVisible();
+    return this;
+  }
+
+  async expectSmallErrorMessageIsLoaded(): Promise<this> {
+    await expect(
+      this.errorMessage_large,
       "Expect Error meessage is displayed"
     ).toBeVisible();
     return this;
