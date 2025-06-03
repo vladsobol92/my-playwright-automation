@@ -1,8 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { acceptCookies } from "../../../helper/base-actions";
 
-const TEST_URL = "https://rahvaraamat.ee/en";
-
 test("Login with non existing credentials", async ({ page }) => {
   // credentials
   let loginData = {
@@ -11,7 +9,7 @@ test("Login with non existing credentials", async ({ page }) => {
   };
 
   // go to URL
-  await page.goto(TEST_URL);
+  await page.goto("/en");
   // Accept cookie
 
   let homePage = await acceptCookies(page);
@@ -36,7 +34,7 @@ test("Login with Invalid email", async ({ page }) => {
   };
 
   // go to URL
-  await page.goto(TEST_URL);
+  await page.goto("/en");
   // Accept cookie
 
   let homePage = await acceptCookies(page);

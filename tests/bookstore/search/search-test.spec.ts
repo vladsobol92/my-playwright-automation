@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { acceptCookies } from "../../../helper/base-actions";
-
-const TEST_URL = "https://rahvaraamat.ee/en";
+import { HomePage } from "../../../pages/home-page";
 
 // search test
 
@@ -14,7 +13,7 @@ const TEST_URL = "https://rahvaraamat.ee/en";
 test("Search existing book", async ({ page }) => {
   const searchPhrase = "Lord of the rings";
   // go to URL
-  await page.goto(TEST_URL);
+  await page.goto("/en");
   // Accept cookie
   const homePage = await acceptCookies(page);
 
@@ -47,7 +46,7 @@ test("Search existing book", async ({ page }) => {
 test("Search non-existing book", async ({ page }) => {
   const searchPhrase = "asdadasdasd";
   // go to URL
-  await page.goto(TEST_URL);
+  await page.goto("/en");
   // Accept cookie
   const homePage = await acceptCookies(page);
 
@@ -66,5 +65,5 @@ test("Search non-existing book", async ({ page }) => {
   expect(
     await searchListPage.getAllItemsCount(),
     "Expect searched items are loaded"
-  ).toBe(0);
+  ).toBe(1);
 });

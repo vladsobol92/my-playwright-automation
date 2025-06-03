@@ -10,6 +10,8 @@ import { defineConfig, devices } from "@playwright/test";
 
 /**
  * See https://playwright.dev/docs/test-configuration.
+ * Also see
+ * https://playwright.dev/docs/api/class-testoptions#test-options-action-timeout
  */
 
 const ELEMENTS_TIMEOUT = 3_000;
@@ -35,13 +37,18 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
+    baseURL: "https://rahvaraamat.ee",
+
+    locale: "en-US",
 
     actionTimeout: ELEMENTS_TIMEOUT, // timeout for each action like click(), fill(), etc.
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
+    headless: false, // 👈 This runs the browser in headed mode
 
-    headless: true, // 👈 This runs the browser in headed mode
+    //https://playwright.dev/docs/videos#record-video
+    video: "retain-on-failure", // 👈 record video only when test fails
+    screenshot: "only-on-failure",
   },
 
   /* Configure projects for major browsers */
@@ -50,8 +57,8 @@ export default defineConfig({
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
     },
-    /*
-        {
+
+    {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
     },
@@ -65,7 +72,6 @@ export default defineConfig({
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
     },
-    */
 
     /* Test against mobile viewports. */
     // {
