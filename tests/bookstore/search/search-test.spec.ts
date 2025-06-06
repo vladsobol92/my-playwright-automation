@@ -4,6 +4,13 @@ import { HomePage } from "../../../pages/home-page";
 
 // search test
 
+test.beforeEach("Before each", async ({ page }) => {
+  // go to URL
+  await page.goto("/en");
+  // Accept cookie
+  await acceptCookies(page);
+});
+
 /**
  * T1
  * 1) navigate to main page
@@ -12,13 +19,11 @@ import { HomePage } from "../../../pages/home-page";
  */
 test("Search existing book", async ({ page }) => {
   const searchPhrase = "Lord of the rings";
-  // go to URL
-  await page.goto("/en");
-  // Accept cookie
-  const homePage = await acceptCookies(page);
 
   //type in the search input
-  const searchListPage = await homePage.pageHeader.performSearch(searchPhrase);
+  const searchListPage = await new HomePage(page).pageHeader.performSearch(
+    searchPhrase
+  );
 
   await searchListPage.expectItemsListPageLoaded();
 
@@ -43,15 +48,13 @@ test("Search existing book", async ({ page }) => {
  * 3) validate results NOT found
  */
 
-test("Search non-existing book", async ({ page }) => {
+test("Search non-existing book: EXPECTED to FAIL", async ({ page }) => {
   const searchPhrase = "asdadasdasd";
-  // go to URL
-  await page.goto("/en");
-  // Accept cookie
-  const homePage = await acceptCookies(page);
 
   //type in the search input
-  const searchListPage = await homePage.pageHeader.performSearch(searchPhrase);
+  const searchListPage = await new HomePage(page).pageHeader.performSearch(
+    searchPhrase
+  );
 
   await searchListPage.expectItemsListPageLoaded();
 
@@ -64,6 +67,29 @@ test("Search non-existing book", async ({ page }) => {
 
   expect(
     await searchListPage.getAllItemsCount(),
-    "Expect searched items are loaded"
+    "Expect searched items are NOT loaded"
   ).toBe(1);
+});
+
+test("Search non-existing book", async ({ page }) => {
+  const searchPhrase = "asdadasdasd";
+
+  //type in the search input
+  const searchListPage = await new HomePage(page).pageHeader.performSearch(
+    searchPhrase
+  );
+
+  await searchListPage.expectItemsListPageLoaded();
+
+  const pageTitleText = await searchListPage.getTitleText();
+
+  // wait for full results to load
+  expect(pageTitleText, "Expect search results to load").toContain(
+    "Search results"
+  );
+
+  expect(
+    await searchListPage.getAllItemsCount(),
+    "Expect searched items are NOT loaded"
+  ).toBe(0);
 });

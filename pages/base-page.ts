@@ -28,7 +28,7 @@ export class BasePage<T> {
 
   async expectSmallErrorMessageIsLoaded(): Promise<this> {
     await expect(
-      this.errorMessage_large,
+      this.errorMessage_small,
       "Expect Error meessage is displayed"
     ).toBeVisible();
     return this;

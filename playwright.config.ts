@@ -38,7 +38,6 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: "https://rahvaraamat.ee",
-
     locale: "en-US",
 
     actionTimeout: ELEMENTS_TIMEOUT, // timeout for each action like click(), fill(), etc.
@@ -57,12 +56,6 @@ export default defineConfig({
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
     },
-
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
