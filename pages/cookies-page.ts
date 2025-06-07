@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { HomePage } from "./home-page";
 import { BasePage } from "./base-page";
+import { log } from "../utill/logger.ts";
 
 export class CookiesPage extends BasePage<CookiesPage> {
   // locators

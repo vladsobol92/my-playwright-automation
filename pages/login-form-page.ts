@@ -1,5 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { BasePage } from "./base-page";
+import { log } from "../utill/logger.ts";
+
 export class LoginFormPage extends BasePage<LoginFormPage> {
   // private readonly page: Page;
 

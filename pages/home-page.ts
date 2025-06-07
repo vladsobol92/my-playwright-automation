@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { HeaderPage } from "./page-components/page-header";
 import { BasePage } from "./base-page";
+import { log } from "../utill/logger.ts";
 
 export class HomePage extends BasePage<HomePage> {
   readonly pageHeader: HeaderPage;

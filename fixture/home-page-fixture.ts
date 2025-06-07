@@ -1,6 +1,7 @@
 import { test as baseTest } from "@playwright/test";
 import { HomePage } from "../pages/home-page";
 import { acceptCookies } from "../helper/base-actions";
+import { log } from "../utill/logger.ts";
 
 type HomePageFixture = {
   homepage: HomePage;
