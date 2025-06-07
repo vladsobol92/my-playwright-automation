@@ -1,9 +1,9 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { LoginFormPage } from "../login-form-page";
 import { ItemsListPage } from "../items-list-page";
-export class HeaderPage {
-  private readonly page: Page;
+import { BasePage } from "../base-page";
 
+export class HeaderPage extends BasePage<HeaderPage> {
   // locators
   private readonly mainElement: Locator;
   private readonly searchInput: Locator;
@@ -11,7 +11,7 @@ export class HeaderPage {
   private readonly loginButton: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.mainElement = this.page.locator('[class^="styles_header__"]');
     this.searchInput = this.mainElement.locator('input[name="search"]');
     this.searchButton = this.mainElement.getByRole("button", {
@@ -20,8 +20,8 @@ export class HeaderPage {
     this.loginButton = this.page.getByText("Login");
   }
 
-  async expectHeaderPageLoaded(): Promise<this> {
-    await expect(this.mainElement).toBeVisible();
+  async expectHeaderPageLoaded() {
+    await super.expectPageLoaded(this.mainElement, "Page Header");
     return this;
   }
 
@@ -30,7 +30,7 @@ export class HeaderPage {
     return new LoginFormPage(this.page);
   }
 
-  async setSearchPhrase(searchPhrase: string): Promise<this> {
+  async setSearchPhrase(searchPhrase: string) {
     await this.searchInput.nth(1).fill(searchPhrase);
     return this;
   }

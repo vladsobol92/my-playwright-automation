@@ -1,21 +1,21 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { HeaderPage } from "./page-components/page-header";
+import { BasePage } from "./base-page";
 
-export class HomePage {
-  private readonly page: Page;
+export class HomePage extends BasePage<HomePage> {
   readonly pageHeader: HeaderPage;
 
   // locators
   private readonly mainElement: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.pageHeader = new HeaderPage(this.page);
     this.mainElement = this.page.getByRole("heading", { name: "By Category" });
   }
 
-  async expectHomePageLoaded(): Promise<this>  {
-    await expect(this.mainElement).toBeVisible();
+  async expectHomePageLoaded() {
+    await super.expectPageLoaded(this.mainElement, "Home Page");
     return this;
   }
 }

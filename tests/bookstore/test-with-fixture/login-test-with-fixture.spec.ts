@@ -2,7 +2,6 @@ import {
   test as testWithFixture,
   expect,
 } from "../../../fixture/home-page-fixture.ts";
-import { HomePage } from "../../../pages/home-page.ts";
 
 testWithFixture.describe("Login tests with the fixture", () => {
   testWithFixture(

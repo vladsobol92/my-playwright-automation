@@ -6,7 +6,7 @@ import { expect, type Locator, type Page } from "@playwright/test";
  */
 export class BasePage<T> {
   // Page - treat it like Webdriver in Selenium
-  protected readonly page: Page;
+  public readonly page: Page;
 
   // locators
   public errorMessage_large: Locator;
@@ -18,7 +18,12 @@ export class BasePage<T> {
     this.errorMessage_small = page.locator(".errorMessage"); // expect error message
   }
 
-  async expectLargeErrorMessageIsLoaded(): Promise<this> {
+  async expectPageLoaded(mainElement: Locator, pageName: string) {
+    await expect(mainElement, `Expect '${pageName}' is loaded`).toBeVisible();
+    return this;
+  }
+
+  async expectLargeErrorMessageIsLoaded() {
     await expect(
       this.errorMessage_large,
       "Expect Error meessage is displayed"
@@ -26,7 +31,7 @@ export class BasePage<T> {
     return this;
   }
 
-  async expectSmallErrorMessageIsLoaded(): Promise<this> {
+  async expectSmallErrorMessageIsLoaded() {
     await expect(
       this.errorMessage_small,
       "Expect Error meessage is displayed"

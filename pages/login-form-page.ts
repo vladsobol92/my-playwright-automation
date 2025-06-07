@@ -20,33 +20,27 @@ export class LoginFormPage extends BasePage<LoginFormPage> {
     this.submitButton = this.mainElement.locator('button[type="submit"]');
   }
 
-  async expectLoginPageLoaded(): Promise<this> {
-    await expect(
-      this.mainElement,
-      "Expect 'Login Page' is displayed"
-    ).toBeVisible();
+  async expectLoginPageLoaded() {
+    await super.expectPageLoaded(this.mainElement, "Login Page");
     return this;
   }
 
-  async setEmail(email: string): Promise<this> {
+  async setEmail(email: string) {
     await this.emailInput.fill(email);
     return this;
   }
 
-  async setPassword(password: string): Promise<this> {
+  async setPassword(password: string) {
     await this.passwordInput.fill(password);
     return this;
   }
 
-  async clickSubmit(): Promise<this> {
+  async clickSubmit() {
     await this.submitButton.click();
     return this;
   }
 
-  async loginWithCredentials(credentials: {
-    email: string;
-    pass: string;
-  }): Promise<this> {
+  async loginWithCredentials(credentials: { email: string; pass: string }) {
     await this.setEmail(credentials.email);
     await this.setPassword(credentials.pass);
     await this.clickSubmit();

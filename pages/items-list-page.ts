@@ -1,8 +1,8 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { HeaderPage } from "./page-components/page-header";
+import { BasePage } from "./base-page";
 
-export class ItemsListPage {
-  private readonly page: Page;
+export class ItemsListPage extends BasePage<ItemsListPage> {
   readonly pageHeader: HeaderPage;
 
   // locators
@@ -11,7 +11,7 @@ export class ItemsListPage {
   private readonly productItem: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.pageHeader = new HeaderPage(this.page);
     this.mainElement = this.page.locator('[class^="styles_itemsRow__"]');
     this.itemsListTitle = this.page.locator('[class^="styles_titleRow__"]');
@@ -21,7 +21,7 @@ export class ItemsListPage {
   }
 
   async expectItemsListPageLoaded() {
-    await expect(this.mainElement).toBeVisible();
+    await super.expectPageLoaded(this.mainElement, "Items List Page");
     return this;
   }
 
