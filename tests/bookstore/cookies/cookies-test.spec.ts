@@ -11,7 +11,9 @@ import { CookiesPage } from "../../../pages/cookies-page";
 test("Accept cookies", async ({ page }) => {
   // go to URL
   await page.goto("/en");
-  await acceptCookies(page);
+  const cookiesPage = new CookiesPage(page);
+  const homePage = await cookiesPage.clickAllowCookiesButton();
+  await homePage.expectHomePageLoaded();
 });
 
 test("Deny cookies", async ({ page }) => {
@@ -19,5 +21,6 @@ test("Deny cookies", async ({ page }) => {
   await page.goto("/en");
   // Deny cookie
   let cookiesPage = new CookiesPage(page);
-  await (await cookiesPage.clickDenyButton()).expectHomePageLoaded();
+  const homePage = await cookiesPage.clickDenyButton();
+  await homePage.expectHomePageLoaded();
 });

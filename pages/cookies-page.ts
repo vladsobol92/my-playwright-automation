@@ -24,6 +24,10 @@ export class CookiesPage extends BasePage<CookiesPage> {
     this.denyButton = page.getByRole("button", { name: "Deny", exact: true });
   }
 
+  async isLoaded(waitMillisec: number) {
+    return await super.isPageLoaded(this.mainElement, waitMillisec);
+  }
+
   async expectCookiesPageLoaded() {
     await super.expectPageLoaded(this.mainElement, "Cookies Page");
     return this;

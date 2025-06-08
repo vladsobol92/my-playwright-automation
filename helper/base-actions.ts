@@ -11,8 +11,14 @@ import { HomePage } from "../pages/home-page";
  * @param page
  */
 export async function acceptCookies(page: Page): Promise<HomePage> {
-  let cookiesPage = new CookiesPage(page);
-  return await (
-    await cookiesPage.clickAllowCookiesButton()
-  ).expectHomePageLoaded();
+  const cookiesPage = new CookiesPage(page);
+
+  const isCookiesPageLoaded = await cookiesPage.isLoaded(1500);
+  if (isCookiesPageLoaded) {
+    const homePage = await cookiesPage.clickAllowCookiesButton();
+    return homePage.expectHomePageLoaded();
+  }
+
+  const homePage = new HomePage(page);
+  return homePage.expectHomePageLoaded();
 }

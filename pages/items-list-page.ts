@@ -34,7 +34,7 @@ export class ItemsListPage extends BasePage<ItemsListPage> {
     try {
       // try to wait for items and get the count
       await this.productItem.first().waitFor();
-      return this.productItem.count();
+      return await this.productItem.count();
     } catch (e) {
       // error - no items found
       return 0;

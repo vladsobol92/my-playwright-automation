@@ -1,6 +1,27 @@
 name: Playwright Tests
 on:
   workflow_dispatch:
+    inputs:
+      project:
+        description: "Playwright project to run"
+        required: true
+        default: "chromium"
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+      workers:
+        description: "Number of workers"
+        required: true
+        type: choice
+        default: "4"
+        options:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
 jobs:
   test:
     timeout-minutes: 60
@@ -15,7 +36,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npx playwright test --project=chromium --workers=4
+        run: npx playwright test --project=${{ github.event.inputs.project }} --workers=${{ github.event.inputs.workers }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

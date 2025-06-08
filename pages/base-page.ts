@@ -19,6 +19,15 @@ export class BasePage<T> {
     this.errorMessage_small = page.locator(".errorMessage"); // expect error message
   }
 
+  async isPageLoaded(element: Locator, millisec: number) {
+    try {
+      await element.waitFor({ timeout: millisec });
+      return await element.isVisible();
+    } catch (e) {
+      return false;
+    }
+  }
+
   async expectPageLoaded(mainElement: Locator, pageName: string) {
     await expect(mainElement, `Expect '${pageName}' is loaded`).toBeVisible();
     return this;
