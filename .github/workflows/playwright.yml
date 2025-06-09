@@ -36,7 +36,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npx playwright test --project=${{ github.event.inputs.project }} --workers=${{ github.event.inputs.workers }}
+        run: npx playwright test bookstore --project=${{ github.event.inputs.project }} --workers=${{ github.event.inputs.workers }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

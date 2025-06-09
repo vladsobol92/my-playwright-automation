@@ -1,75 +1,57 @@
 import { test, expect } from "@playwright/test";
 import { acceptCookies } from "../../../helper/base-actions";
 import { HomePage } from "../../../pages/home-page";
+import { LoginFormPage } from "../../../pages/login-form-page";
 
 test.beforeEach("Before each", async ({ page }) => {
-  // go to URL
   await page.goto("/en");
-  // Accept cookie
   await acceptCookies(page);
 });
 
+/**
+ * Helper to go to the login form
+ */
+const goToLoginForm = async (page): Promise<LoginFormPage> => {
+  const homePage = new HomePage(page);
+  const loginFormPage = await homePage.pageHeader.clickLoginButton();
+  return loginFormPage.expectLoginPageLoaded();
+};
+
 test("Login with non-existing credentials", async ({ page }) => {
-  // credentials
-  let loginData = {
+  const credentials = {
     email: "nonExistingEmail@mail.com",
-    pass: "12345789",
+    password: "12345789",
   };
 
-  // click Login button
-  let loginFormPage = await new HomePage(page).pageHeader.clickLoginButton();
-
-  // expect login form is loaded
-  await loginFormPage.expectLoginPageLoaded();
-
-  // try to login
-  await (
-    await loginFormPage.loginWithCredentials(loginData)
-  ).expectLargeErrorMessageIsLoaded();
+  const loginFormPage = await goToLoginForm(page);
+  await loginFormPage.loginWithCredentials(credentials);
+  await loginFormPage.expectLargeErrorMessageIsLoaded();
 });
 
 test("Login with invalid email", async ({ page }) => {
-  // credentials
-  let loginData = {
+  const credentials = {
     email: "invalidEmail",
-    pass: "12345789",
+    password: "12345789",
   };
 
-  // click Login button
-  let loginFormPage = await new HomePage(page).pageHeader.clickLoginButton();
+  const loginFormPage = await goToLoginForm(page);
+  await loginFormPage.loginWithCredentials(credentials);
+  await loginFormPage.expectSmallErrorMessageIsLoaded();
 
-  // expect login form is loaded
-  await loginFormPage.expectLoginPageLoaded();
-
-  // try to login
-  await (
-    await loginFormPage.loginWithCredentials(loginData)
-  ).expectSmallErrorMessageIsLoaded();
-
-  // validate error text
-  let errorText = "Please enter a valid email.";
-  expect(loginFormPage.errorMessage_small).toHaveText(errorText);
+  const expectedError = "Please enter a valid email.";
+  await expect(loginFormPage.errorMessageSmall).toHaveText(expectedError);
 });
 
 test("Login without password", async ({ page }) => {
-  // credentials
-  let loginData = {
+  const credentials = {
     email: "someemail@gmail.com",
-    pass: "",
+    password: "",
   };
 
-  // click Login button
-  let loginFormPage = await new HomePage(page).pageHeader.clickLoginButton();
+  const loginFormPage = await goToLoginForm(page);
+  await loginFormPage.loginWithCredentials(credentials);
+  await loginFormPage.expectSmallErrorMessageIsLoaded();
 
-  // expect login form is loaded
-  await loginFormPage.expectLoginPageLoaded();
-
-  // try to login
-  await (
-    await loginFormPage.loginWithCredentials(loginData)
-  ).expectSmallErrorMessageIsLoaded();
-
-  // validate error text
-  let errorText = "Required";
-  expect(loginFormPage.errorMessage_small).toHaveText(errorText);
+  const expectedError = "Required";
+  await expect(loginFormPage.errorMessageSmall).toHaveText(expectedError);
 });

@@ -1,12 +1,15 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { HeaderPage } from "./page-components/page-header";
 import { BasePage } from "./base-page";
-import { log } from "../utill/logger.ts";
+import { log } from "../util/logger";
 
+/**
+ * Page Object Model for the Items List Page.
+ */
 export class ItemsListPage extends BasePage<ItemsListPage> {
   readonly pageHeader: HeaderPage;
 
-  // locators
+  // Locators
   private readonly mainElement: Locator;
   private readonly itemsListTitle: Locator;
   private readonly productItem: Locator;
@@ -14,29 +17,37 @@ export class ItemsListPage extends BasePage<ItemsListPage> {
   constructor(page: Page) {
     super(page);
     this.pageHeader = new HeaderPage(this.page);
-    this.mainElement = this.page.locator('[class^="styles_itemsRow__"]');
-    this.itemsListTitle = this.page.locator('[class^="styles_titleRow__"]');
-    this.productItem = this.page.locator(
-      '[class^="styles_productCardWrapper__"]'
-    );
+
+    this.mainElement = page.locator('[class^="styles_itemsRow__"]');
+    this.itemsListTitle = page.locator('[class^="styles_titleRow__"]');
+    this.productItem = page.locator('[class^="styles_productCardWrapper__"]');
   }
 
-  async expectItemsListPageLoaded() {
-    await super.expectPageLoaded(this.mainElement, "Items List Page");
+  /**
+   * Verifies that the Items List Page is loaded.
+   */
+  async expectItemsListPageLoaded(): Promise<this> {
+    await this.expectPageLoaded(this.mainElement, "Items List Page");
     return this;
   }
 
-  async getTitleText() {
-    return await this.itemsListTitle.textContent();
+  /**
+   * Returns the text content of the items list title.
+   */
+  async getTitleText(): Promise<string | null> {
+    return this.itemsListTitle.textContent();
   }
 
-  async getAllItemsCount() {
+  /**
+   * Returns the number of product items displayed on the page.
+   * If no items are found or load fails, returns 0.
+   */
+  async getAllItemsCount(): Promise<number> {
     try {
-      // try to wait for items and get the count
       await this.productItem.first().waitFor();
-      return await this.productItem.count();
-    } catch (e) {
-      // error - no items found
+      return this.productItem.count();
+    } catch (error) {
+      log(`No product items found: ${error}`);
       return 0;
     }
   }

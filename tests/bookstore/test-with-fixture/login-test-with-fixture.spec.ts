@@ -1,75 +1,48 @@
-import {
-  test as testWithFixture,
-  expect,
-} from "../../../fixture/home-page-fixture.ts";
+import { test as testWithFixture, expect } from "../../../fixture/home-page-fixture.ts";
 
 testWithFixture.describe("Login tests with the fixture", () => {
-  testWithFixture(
-    "Login with non-existing credentials",
-    async ({ homepage }) => {
-      // credentials
-      let loginData = {
-        email: "nonExistingEmail@mail.com",
-        pass: "12345789",
-      };
-
-      homepage;
-      // click Login button
-      let loginFormPage = await homepage.pageHeader.clickLoginButton();
-
-      // expect login form is loaded
-      await loginFormPage.expectLoginPageLoaded();
-
-      // try to login
-      await (
-        await loginFormPage.loginWithCredentials(loginData)
-      ).expectLargeErrorMessageIsLoaded();
-    }
-  );
-
-  testWithFixture("Login with invalid email", async ({ homepage }) => {
-    // credentials
-    let loginData = {
-      email: "invalidEmail",
-      pass: "12345789",
+  testWithFixture("Login with non-existing credentials shows large error", async ({ homepage }) => {
+    const credentials = {
+      email: "nonExistingEmail@mail.com",
+      password: "12345789",
     };
 
-    // click Login button
-    let loginFormPage = await homepage.pageHeader.clickLoginButton();
-
-    // expect login form is loaded
+    const loginFormPage = await homepage.pageHeader.clickLoginButton();
     await loginFormPage.expectLoginPageLoaded();
 
-    // try to login
-    await (
-      await loginFormPage.loginWithCredentials(loginData)
-    ).expectSmallErrorMessageIsLoaded();
-
-    // validate error text
-    let errorText = "Please enter a valid email.";
-    expect(loginFormPage.errorMessage_small).toHaveText(errorText);
+    await loginFormPage.loginWithCredentials(credentials);
+    await loginFormPage.expectLargeErrorMessageIsLoaded();
   });
 
-  testWithFixture("Login without password", async ({ homepage }) => {
-    // credentials
-    let loginData = {
-      email: "someemail@gmail.com",
-      pass: "",
+  testWithFixture("Login with invalid email shows small validation error", async ({ homepage }) => {
+    const credentials = {
+      email: "invalidEmail",
+      password: "12345789",
     };
 
-    // click Login button
-    let loginFormPage = await homepage.pageHeader.clickLoginButton();
-
-    // expect login form is loaded
+    const loginFormPage = await homepage.pageHeader.clickLoginButton();
     await loginFormPage.expectLoginPageLoaded();
 
-    // try to login
-    await (
-      await loginFormPage.loginWithCredentials(loginData)
-    ).expectSmallErrorMessageIsLoaded();
+    await loginFormPage.loginWithCredentials(credentials);
+    await loginFormPage.expectSmallErrorMessageIsLoaded();
 
-    // validate error text
-    let errorText = "Required";
-    expect(loginFormPage.errorMessage_small).toHaveText(errorText);
+    const expectedErrorText = "Please enter a valid email.";
+    await expect(loginFormPage.errorMessageSmall).toHaveText(expectedErrorText);
+  });
+
+  testWithFixture("Login without password shows small validation error", async ({ homepage }) => {
+    const credentials = {
+      email: "someemail@gmail.com",
+      password: "",
+    };
+
+    const loginFormPage = await homepage.pageHeader.clickLoginButton();
+    await loginFormPage.expectLoginPageLoaded();
+
+    await loginFormPage.loginWithCredentials(credentials);
+    await loginFormPage.expectSmallErrorMessageIsLoaded();
+
+    const expectedErrorText = "Required";
+    await expect(loginFormPage.errorMessageSmall).toHaveText(expectedErrorText);
   });
 });

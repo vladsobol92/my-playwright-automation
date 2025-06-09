@@ -2,94 +2,42 @@ import { test, expect } from "@playwright/test";
 import { acceptCookies } from "../../../helper/base-actions";
 import { HomePage } from "../../../pages/home-page";
 
-// search test
-
+// Before each test, navigate to main page and accept cookies
 test.beforeEach("Before each", async ({ page }) => {
-  // go to URL
   await page.goto("/en");
-  // Accept cookie
   await acceptCookies(page);
 });
 
 /**
- * T1
- * 1) navigate to main page
- * 2) type in search soemthing
- * 3) validate results found
+ * Shared helper to perform a search and return the resulting page
  */
-test("Search existing book", async ({ page }) => {
+const performSearchFlow = async (page, searchPhrase: string) => {
+  const homePage = new HomePage(page);
+  const searchResultsPage = await homePage.pageHeader.performSearch(
+    searchPhrase
+  );
+  await searchResultsPage.expectItemsListPageLoaded();
+
+  const titleText = await searchResultsPage.getTitleText();
+  expect(titleText, "Expect search results to load").toContain(
+    "Search results"
+  );
+
+  return searchResultsPage;
+};
+
+test("Search for an existing book", async ({ page }) => {
   const searchPhrase = "Lord of the rings";
+  const searchResultsPage = await performSearchFlow(page, searchPhrase);
 
-  //type in the search input
-  const searchListPage = await new HomePage(page).pageHeader.performSearch(
-    searchPhrase
-  );
-
-  await searchListPage.expectItemsListPageLoaded();
-
-  const pageTitleText = await searchListPage.getTitleText();
-
-  // wait for full results to load
-  expect(pageTitleText, "Expect search results to load").toContain(
-    "Search results"
-  );
-
-  // check search results are loaded
-  expect(
-    await searchListPage.getAllItemsCount(),
-    "Expect searched items are loaded"
-  ).toBeGreaterThan(0);
+  const itemCount = await searchResultsPage.getAllItemsCount();
+  expect(itemCount, "Expect searched items are loaded").toBeGreaterThan(0);
 });
 
-/**
- * T2
- * 1) navigate to main page
- * 2) type non existing values in search
- * 3) validate results NOT found
- */
+test("Search for a non-existing book", async ({ page }) => {
+  const searchPhrase = "asdadasdasd"; // unlikely to return results
+  const searchResultsPage = await performSearchFlow(page, searchPhrase);
 
-test("Search non-existing book: EXPECTED to FAIL", async ({ page }) => {
-  const searchPhrase = "asdadasdasd";
-
-  //type in the search input
-  const searchListPage = await new HomePage(page).pageHeader.performSearch(
-    searchPhrase
-  );
-
-  await searchListPage.expectItemsListPageLoaded();
-
-  const pageTitleText = await searchListPage.getTitleText();
-
-  // wait for full results to load
-  expect(pageTitleText, "Expect search results to load").toContain(
-    "Search results"
-  );
-
-  expect(
-    await searchListPage.getAllItemsCount(),
-    "Expect searched items are NOT loaded"
-  ).toBe(1);
-});
-
-test("Search non-existing book", async ({ page }) => {
-  const searchPhrase = "asdadasdasd";
-
-  //type in the search input
-  const searchListPage = await new HomePage(page).pageHeader.performSearch(
-    searchPhrase
-  );
-
-  await searchListPage.expectItemsListPageLoaded();
-
-  const pageTitleText = await searchListPage.getTitleText();
-
-  // wait for full results to load
-  expect(pageTitleText, "Expect search results to load").toContain(
-    "Search results"
-  );
-
-  expect(
-    await searchListPage.getAllItemsCount(),
-    "Expect searched items are NOT loaded"
-  ).toBe(0);
+  const itemCount = await searchResultsPage.getAllItemsCount();
+  expect(itemCount, "Expect no items to be found").toBe(0);
 });
