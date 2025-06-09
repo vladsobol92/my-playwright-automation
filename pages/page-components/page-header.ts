@@ -34,7 +34,7 @@ export class HeaderPage extends BasePage<HeaderPage> {
   }
 
   async setSearchPhrase(phrase: string): Promise<this> {
-    await this.searchInput.first().fill(phrase);
+    await this.searchInput.nth(1).fill(phrase);
     return this;
   }
 
@@ -44,6 +44,7 @@ export class HeaderPage extends BasePage<HeaderPage> {
   }
 
   async performSearch(phrase: string): Promise<ItemsListPage> {
-    return this.setSearchPhrase(phrase).then(() => this.clickSearchButton());
+    await this.setSearchPhrase(phrase);
+    return await this.clickSearchButton();
   }
 }

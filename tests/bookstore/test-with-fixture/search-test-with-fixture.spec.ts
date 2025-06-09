@@ -45,7 +45,7 @@ testWithFixture.describe("Search tests with the fixture", () => {
   );
 
   // Optional: Remove or mark as skipped/failing if known broken test
-  testWithFixture.skip(
+  testWithFixture(
     "Search non-existing book: EXPECTED to FAIL",
     async ({ homepage }) => {
       const searchPhrase = "asdadasdasd";
