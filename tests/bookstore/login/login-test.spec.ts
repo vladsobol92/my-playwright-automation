@@ -25,7 +25,10 @@ test("Login with non-existing credentials", async ({ page }) => {
 
   const loginFormPage = await goToLoginForm(page);
   await loginFormPage.loginWithCredentials(credentials);
-  await loginFormPage.expectLargeErrorMessageIsLoaded();
+  await expect(
+    loginFormPage.invalidCredentialsError,
+    "'Invalid Credentials' error message"
+  ).toBeVisible();
 });
 
 test("Login with invalid email", async ({ page }) => {
@@ -36,10 +39,10 @@ test("Login with invalid email", async ({ page }) => {
 
   const loginFormPage = await goToLoginForm(page);
   await loginFormPage.loginWithCredentials(credentials);
-  await loginFormPage.expectSmallErrorMessageIsLoaded();
-
-  const expectedError = "Please enter a valid email.";
-  await expect(loginFormPage.errorMessageSmall).toHaveText(expectedError);
+  await expect(
+    loginFormPage.invalidEmailError,
+    "'Invalid Email' error message"
+  ).toBeVisible();
 });
 
 test("Login without password", async ({ page }) => {
@@ -50,8 +53,22 @@ test("Login without password", async ({ page }) => {
 
   const loginFormPage = await goToLoginForm(page);
   await loginFormPage.loginWithCredentials(credentials);
-  await loginFormPage.expectSmallErrorMessageIsLoaded();
+  await expect(
+    loginFormPage.missingRequiredFiledError,
+    "Missing required field message"
+  ).toBeVisible();
+});
 
-  const expectedError = "Required";
-  await expect(loginFormPage.errorMessageSmall).toHaveText(expectedError);
+test("Login without email", async ({ page }) => {
+  const credentials = {
+    email: "",
+    password: "123123123",
+  };
+
+  const loginFormPage = await goToLoginForm(page);
+  await loginFormPage.loginWithCredentials(credentials);
+  await expect(
+    loginFormPage.missingRequiredFiledError,
+    "Missing required field message"
+  ).toBeVisible();
 });

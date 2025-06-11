@@ -47,7 +47,6 @@ export class ItemsListPage extends BasePage<ItemsListPage> {
       await this.productItem.first().waitFor();
       return this.productItem.count();
     } catch (error) {
-      log(`No product items found: ${error}`);
       return 0;
     }
   }

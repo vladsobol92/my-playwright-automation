@@ -1,20 +1,29 @@
-import { test as testWithFixture, expect } from "../../../fixture/home-page-fixture.ts";
+import {
+  test as testWithFixture,
+  expect,
+} from "../../../fixture/home-page-fixture.ts";
 
 testWithFixture.describe("Login tests with the fixture", () => {
-  testWithFixture("Login with non-existing credentials shows large error", async ({ homepage }) => {
-    const credentials = {
-      email: "nonExistingEmail@mail.com",
-      password: "12345789",
-    };
+  testWithFixture(
+    "Login with non-existing credentials",
+    async ({ homepage }) => {
+      const credentials = {
+        email: "nonExistingEmail@mail.com",
+        password: "12345789",
+      };
 
-    const loginFormPage = await homepage.pageHeader.clickLoginButton();
-    await loginFormPage.expectLoginPageLoaded();
+      const loginFormPage = await homepage.pageHeader.clickLoginButton();
+      await loginFormPage.expectLoginPageLoaded();
 
-    await loginFormPage.loginWithCredentials(credentials);
-    await loginFormPage.expectLargeErrorMessageIsLoaded();
-  });
+      await loginFormPage.loginWithCredentials(credentials);
+      await expect(
+        loginFormPage.invalidCredentialsError,
+        "'Invalid Credentials' error message"
+      ).toBeVisible();
+    }
+  );
 
-  testWithFixture("Login with invalid email shows small validation error", async ({ homepage }) => {
+  testWithFixture("Login with invalid email", async ({ homepage }) => {
     const credentials = {
       email: "invalidEmail",
       password: "12345789",
@@ -24,13 +33,13 @@ testWithFixture.describe("Login tests with the fixture", () => {
     await loginFormPage.expectLoginPageLoaded();
 
     await loginFormPage.loginWithCredentials(credentials);
-    await loginFormPage.expectSmallErrorMessageIsLoaded();
-
-    const expectedErrorText = "Please enter a valid email.";
-    await expect(loginFormPage.errorMessageSmall).toHaveText(expectedErrorText);
+    await expect(
+      loginFormPage.invalidEmailError,
+      "'Invalid Email' error message"
+    ).toBeVisible();
   });
 
-  testWithFixture("Login without password shows small validation error", async ({ homepage }) => {
+  testWithFixture("Login without password", async ({ homepage }) => {
     const credentials = {
       email: "someemail@gmail.com",
       password: "",
@@ -40,9 +49,9 @@ testWithFixture.describe("Login tests with the fixture", () => {
     await loginFormPage.expectLoginPageLoaded();
 
     await loginFormPage.loginWithCredentials(credentials);
-    await loginFormPage.expectSmallErrorMessageIsLoaded();
-
-    const expectedErrorText = "Required";
-    await expect(loginFormPage.errorMessageSmall).toHaveText(expectedErrorText);
+    await expect(
+      loginFormPage.missingRequiredFiledError,
+      "'Missing required field' error message"
+    ).toBeVisible();
   });
 });

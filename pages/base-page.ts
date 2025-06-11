@@ -8,14 +8,9 @@ import { expect, type Locator, type Page } from "@playwright/test";
 export class BasePage<T> {
   public readonly page: Page;
 
-  // Common error message locators
-  public readonly errorMessageLarge: Locator;
-  public readonly errorMessageSmall: Locator;
-
   constructor(page: Page) {
     this.page = page;
-    this.errorMessageLarge = page.locator('[class*="styles_error"]');
-    this.errorMessageSmall = page.locator(".errorMessage");
+
   }
 
   /**
@@ -45,25 +40,4 @@ export class BasePage<T> {
     return this;
   }
 
-  /**
-   * Expects a large error message to be visible.
-   */
-  async expectLargeErrorMessageIsLoaded(): Promise<this> {
-    await expect(
-      this.errorMessageLarge,
-      "Expect large error message to be displayed"
-    ).toBeVisible();
-    return this;
-  }
-
-  /**
-   * Expects a small error message to be visible.
-   */
-  async expectSmallErrorMessageIsLoaded(): Promise<this> {
-    await expect(
-      this.errorMessageSmall,
-      "Expect small error message to be displayed"
-    ).toBeVisible();
-    return this;
-  }
 }
