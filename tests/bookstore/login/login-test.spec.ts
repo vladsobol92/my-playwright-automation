@@ -1,21 +1,11 @@
 import { test, expect } from "@playwright/test";
 import { acceptCookies } from "../../../helper/base-actions";
-import { HomePage } from "../../../pages/home-page";
-import { LoginFormPage } from "../../../pages/login-form-page";
+import { goToLoginForm } from "../../../helper/base-actions";
 
 test.beforeEach("Before each", async ({ page }) => {
   await page.goto("/en");
   await acceptCookies(page);
 });
-
-/**
- * Helper to go to the login form
- */
-const goToLoginForm = async (page): Promise<LoginFormPage> => {
-  const homePage = new HomePage(page);
-  const loginFormPage = await homePage.pageHeader.clickLoginButton();
-  return loginFormPage.expectLoginPageLoaded();
-};
 
 test("Login with non-existing credentials", async ({ page }) => {
   const credentials = {

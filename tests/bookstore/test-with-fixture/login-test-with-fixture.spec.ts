@@ -2,19 +2,18 @@ import {
   test as testWithFixture,
   expect,
 } from "../../../fixture/home-page-fixture.ts";
+import { goToLoginForm } from "../../../helper/base-actions";
 
 testWithFixture.describe("Login tests with the fixture", () => {
   testWithFixture(
     "Login with non-existing credentials",
-    async ({ homepage }) => {
+    async ({ homepage, page }) => {
       const credentials = {
         email: "nonExistingEmail@mail.com",
         password: "12345789",
       };
 
-      const loginFormPage = await homepage.pageHeader.clickLoginButton();
-      await loginFormPage.expectLoginPageLoaded();
-
+      const loginFormPage = await goToLoginForm(page);
       await loginFormPage.loginWithCredentials(credentials);
       await expect(
         loginFormPage.invalidCredentialsError,
@@ -23,15 +22,13 @@ testWithFixture.describe("Login tests with the fixture", () => {
     }
   );
 
-  testWithFixture("Login with invalid email", async ({ homepage }) => {
+  testWithFixture("Login with invalid email", async ({homepage, page }) => {
     const credentials = {
       email: "invalidEmail",
       password: "12345789",
     };
-
-    const loginFormPage = await homepage.pageHeader.clickLoginButton();
-    await loginFormPage.expectLoginPageLoaded();
-
+    const loginFormPage = await goToLoginForm(page);
+    
     await loginFormPage.loginWithCredentials(credentials);
     await expect(
       loginFormPage.invalidEmailError,
@@ -39,14 +36,12 @@ testWithFixture.describe("Login tests with the fixture", () => {
     ).toBeVisible();
   });
 
-  testWithFixture("Login without password", async ({ homepage }) => {
+  testWithFixture("Login without password", async ({ homepage,page }) => {
     const credentials = {
       email: "someemail@gmail.com",
       password: "",
     };
-
-    const loginFormPage = await homepage.pageHeader.clickLoginButton();
-    await loginFormPage.expectLoginPageLoaded();
+    const loginFormPage = await goToLoginForm(page);
 
     await loginFormPage.loginWithCredentials(credentials);
     await expect(
