@@ -20,6 +20,7 @@ export class ItemPage extends BasePage<ItemPage> {
     this.mainElement = page.locator('[class^="styles_priceBox_"]');
     this.addToCartButton = this.mainElement.getByRole("button", {
       name: "Add to cart",
+      exact: true,
     });
     this.cartConfirmationText = this.page.getByRole("heading", {
       name: "Item added to the basket",
@@ -34,8 +35,11 @@ export class ItemPage extends BasePage<ItemPage> {
     return this;
   }
 
-
   async clickAddtoCartButton(): Promise<this> {
+    await expect(
+      this.addToCartButton,
+      "'Add to cart' button is INACTIVE"
+    ).toBeEnabled();
     await this.addToCartButton.click();
     return this;
   }

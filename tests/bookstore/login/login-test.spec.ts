@@ -21,7 +21,7 @@ test("Login with non-existing credentials", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("Login with invalid email", async ({ page }) => {
+test("Login with invalid email: @smoke", async ({ page }) => {
   const credentials = {
     email: "invalidEmail",
     password: "12345789",

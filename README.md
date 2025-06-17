@@ -26,8 +26,11 @@ https://rahvaraamat.ee/en
 
 **Example of commands to run tests**
 ```
-- npx playwright test --project=chromium --workers=4
+- npx playwright test --project=chromium --workers=4 // run chrome browser with 4 instances
 - npx playwright test bookstore --project=firefox --workers=4
 - npx playwright test tests/bookstore-search.spec.ts --headed
 - npx playwright test tests/bookstore-search.spec.ts --headed --project=chromium --workers=4
+- npx playwright test --grep '@smoke' --project=chromium --workers=4 // run tests that contain @smoke in the test name
+- npx playwright test --grep-invert '@withBug' --project=chromium --workers=4 // exlude the tests form run
+
 ```

@@ -43,7 +43,7 @@ export default defineConfig({
     actionTimeout: ELEMENTS_TIMEOUT, // timeout for each action like click(), fill(), etc.
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
-    headless: false, // 👈 This runs the browser in headed mode
+    headless: true, // 👈 This runs the browser in headed mode
 
     //https://playwright.dev/docs/videos#record-video
     video: "retain-on-failure", // 👈 record video only when test fails

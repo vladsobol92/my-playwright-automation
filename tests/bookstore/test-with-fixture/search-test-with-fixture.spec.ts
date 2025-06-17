@@ -45,23 +45,20 @@ testWithFixture.describe("Search tests with the fixture", () => {
   );
 
   // Optional: Remove or mark as skipped/failing if known broken test
-  testWithFixture(
-    "Search non-existing book: EXPECTED to FAIL",
-    async ({ homepage }) => {
-      const searchPhrase = "asdadasdasd";
+  testWithFixture("Search non-existing book: @smoke @withBug", async ({ homepage }) => {
+    const searchPhrase = "asdadasdasd";
 
-      const searchListPage = await homepage.pageHeader.performSearch(
-        searchPhrase
-      );
-      await searchListPage.expectItemsListPageLoaded();
+    const searchListPage = await homepage.pageHeader.performSearch(
+      searchPhrase
+    );
+    await searchListPage.expectItemsListPageLoaded();
 
-      const pageTitleText = await searchListPage.getTitleText();
-      await expect(pageTitleText, "Expect search results to load").toContain(
-        "Search results"
-      );
+    const pageTitleText = await searchListPage.getTitleText();
+    await expect(pageTitleText, "Expect search results to load").toContain(
+      "Search results"
+    );
 
-      const itemsCount = await searchListPage.getAllItemsCount();
-      expect(itemsCount, "Expect searched items are NOT loaded").toBe(1);
-    }
-  );
+    const itemsCount = await searchListPage.getAllItemsCount();
+    expect(itemsCount, "Expect searched items are NOT loaded").toBe(1);
+  });
 });

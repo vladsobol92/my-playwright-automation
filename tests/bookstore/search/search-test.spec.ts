@@ -26,7 +26,7 @@ const performSearchFlow = async (page, searchPhrase: string) => {
   return searchResultsPage;
 };
 
-test("Search for an existing book", async ({ page }) => {
+test("Search for an existing book: @smoke", async ({ page }) => {
   const searchPhrase = "Lord of the rings";
   const searchResultsPage = await performSearchFlow(page, searchPhrase);
 

@@ -7,7 +7,7 @@ test.beforeEach("Before each", async ({ page }) => {
   await acceptCookies(page);
 });
 
-test("Add item to cart: Weekly Top Books", async ({ page }) => {
+test("Add item to cart: Weekly Top Books: @smoke", async ({ page }) => {
   const homePage = new HomePage(page);
   const itemPage = await homePage.clickItemWeeklyTopBooks(1);
   await itemPage.expectItemPageLoaded();
@@ -15,7 +15,7 @@ test("Add item to cart: Weekly Top Books", async ({ page }) => {
   await expect(itemPage.cartConfirmationText).toBeVisible();
 });
 
-test("Add item to cart: New Books ", async ({ page }) => {
+test("Add item to cart: New Books", async ({ page }) => {
   const homePage = new HomePage(page);
   const itemPage = await homePage.clickItemNewBooks(1);
   await itemPage.expectItemPageLoaded();
